@@ -29,13 +29,15 @@ const ReservationScreen = () => {
     const handleReservation = () => {
         if (isFormValid()) {
             navigation.navigate('ReservationSuccess' as never)
-            setFormData({
-                name: '',
-                phoneNumber: '',
-                tableNumber: '',
-                time: '',
-                date: ''
-            })
+            setTimeout(() => {
+                setFormData({
+                    name: '',
+                    phoneNumber: '',
+                    tableNumber: '',
+                    time: '',
+                    date: ''
+                })
+            }, 1000)
         }
     }
 
@@ -130,7 +132,7 @@ const ReservationScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 20,
+        paddingHorizontal: 16,
         paddingTop: 20,
     },
     backButton: {
@@ -157,6 +159,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         marginBottom: -10,
         marginLeft: 10,
+        zIndex: 1,
     },
     label: {
         color: '#000000',

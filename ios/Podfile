@@ -17,6 +17,9 @@ end
 target 'Admiral' do
   config = use_native_modules!
 
+  # Add the blur view pod
+pod 'react-native-blur', :path => '../node_modules/@react-native-community/blur'
+
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.

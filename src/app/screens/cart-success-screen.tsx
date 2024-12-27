@@ -20,7 +20,7 @@ const CartSuccessScreen = () => {
 
                 <MyTouchableOpacity
                     style={styles.backButton}
-                    onPress={() => navigation.goBack()}
+                    onPress={() => navigation.navigate('Menu' as never)}
                 >
                     <Text style={styles.backButtonText}>Back to menu</Text>
                 </MyTouchableOpacity>

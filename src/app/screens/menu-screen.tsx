@@ -9,6 +9,8 @@ import { useNavigation } from '@react-navigation/native'
 import LogoIcon from '../../shared/icons/logo-icon'
 import LinesIcon from '../../shared/icons/lines-icon'
 import CartIcon from '../../shared/icons/cart-icon';
+import { useFoodStore } from '../../entities/food/model/food-store'
+import { useCategoryStore } from '../../entities/category/model/category-store'
 
 
 const buttons = [
@@ -20,6 +22,21 @@ const buttons = [
 
 const MenuScreen = () => {
     const navigation = useNavigation();
+    const { activeCategory, setActiveCategory } = useCategoryStore()
+    const { foods, toggleFavorite, incrementQuantity, decrementQuantity, addToBasket } = useFoodStore()
+
+    const filteredFoods = foods.filter(food => {
+        if (activeCategory === 'Favorite') return food.isFavorite
+        return food.category === activeCategory
+    })
+
+    const cartItems = foods.filter(food => food.quantity > 0)
+    const cartItemsCount = cartItems.reduce((sum, item) => sum + item.quantity, 0)
+
+    const foodPairs = []
+    for (let i = 0; i < filteredFoods.length; i += 2) {
+        foodPairs.push(filteredFoods.slice(i, i + 2))
+    }
 
     return (
         <LinearGradient
@@ -47,6 +64,7 @@ const MenuScreen = () => {
                 <MyTouchableOpacity onPress={() => navigation.navigate('Cart' as never)}>
                     <View style={styles.cart}>
                         <CartIcon />
+                        {cartItems.length > 0 && <View style={{ position: 'absolute', bottom: 0, right: 0, backgroundColor: '#D40000', width: 24, height: 24, borderRadius: '100%', justifyContent: 'center', alignItems: 'center' }}><Text style={{ fontSize: 14, fontWeight: '600', color: '#fff' }}>{cartItemsCount}</Text></View>}
                     </View>
                 </MyTouchableOpacity>
             </View>
