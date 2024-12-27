@@ -2,12 +2,21 @@ import React from "react";
 import { Text as RNText, TextProps as RNTextProps } from "react-native";
 
 type FontWeight = "light" | "regular" | "medium" | "bold";
+type FontFamily = "sf" | "montserrat";
 
 interface CustomTextProps extends RNTextProps {
     weight?: FontWeight;
+    font?: FontFamily;
 }
 
-const fontFamilyMap: Record<FontWeight, string> = {
+const sfProFontMap: Record<FontWeight, string> = {
+    light: "SF-Pro-Display-Light",
+    regular: "SF-Pro-Display-Regular",
+    medium: "SF-Pro-Display-Medium",
+    bold: "SF-Pro-Display-Bold",
+};
+
+const montserratFontMap: Record<FontWeight, string> = {
     light: "Montserrat-Light",
     regular: "Montserrat-Regular",
     medium: "Montserrat-Medium",
@@ -16,10 +25,12 @@ const fontFamilyMap: Record<FontWeight, string> = {
 
 const Text: React.FC<CustomTextProps> = ({
     style,
-    weight = "light",
+    weight = "regular",
+    font = "montserrat",
     ...props
 }) => {
-    const fontFamily = fontFamilyMap[weight] || "Montserrat-Regular";
+    const fontMap = font === "sf" ? sfProFontMap : montserratFontMap;
+    const fontFamily = fontMap[weight];
 
     return <RNText style={[{ fontFamily }, style]} {...props} />;
 };

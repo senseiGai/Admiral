@@ -8,16 +8,17 @@ interface Props {
     children: React.ReactNode
     title: string
     isBack?: boolean
+    marginLeft?: number
 }
 
-const AppLayout = ({ children, title, isBack = false }: Props) => {
+const AppLayout = ({ children, title, isBack = false, marginLeft }: Props) => {
     return (
         <LinearGradient
             colors={['#032356', '#0D47A3']}
             style={styles.container}
         >
             <SafeAreaView style={styles.safeArea}>
-                <Header title={title} isBack={isBack} />
+                <Header title={title} isBack={isBack} marginLeft={marginLeft} />
                 <View style={styles.content}>
                     {children}
                 </View>

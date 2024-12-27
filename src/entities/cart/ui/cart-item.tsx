@@ -94,13 +94,18 @@ const styles = StyleSheet.create({
         marginTop: 4,
     },
     details: {
+        marginTop: 2,
         fontSize: 12,
         color: '#303030',
-        marginTop: 2,
         fontWeight: '500',
+        opacity: 0.5,
     },
     quantityContainer: {
         marginTop: 12,
+        position: 'absolute',
+        bottom: 8,
+        right: 12,
+        left: 12
     },
     gradient: {
         flexDirection: 'row',

@@ -21,6 +21,7 @@ interface FoodStore {
     incrementQuantity: (id: string) => void
     decrementQuantity: (id: string) => void
     addToBasket: (id: string) => void
+    resetQuantities: () => void
 }
 
 const mockFoods: IFoodItem[] = [
@@ -215,4 +216,9 @@ export const useFoodStore = create<FoodStore>((set) => ({
             cartStore.updateTotal(food.currentPrice)
         }
     },
+    resetQuantities: () => {
+        set((state) => ({
+            foods: state.foods.map(food => ({ ...food, quantity: 0 }))
+        }))
+    }
 }))

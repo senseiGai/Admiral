@@ -162,6 +162,8 @@ const styles = StyleSheet.create({
         marginTop: 2,
         fontSize: 12,
         color: '#303030',
+        fontWeight: '500',
+        opacity: 0.5,
     },
     buttonContainer: {
         marginTop: 12,

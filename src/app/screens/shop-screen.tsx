@@ -25,9 +25,9 @@ const ShopScreen = () => {
     return (
         <AppLayout title="Shop">
             <View style={styles.categoryContainer}>
-                {CATEGORIES.map((category) => (
+                {CATEGORIES.map((category, index) => (
                     <CategoryButton
-                        key={category}
+                        key={index}
                         title={category}
                         isActive={activeCategory === category}
                         onPress={() => setActiveCategory(category)}
@@ -40,8 +40,9 @@ const ShopScreen = () => {
             >
                 {foodPairs.map((pair, index) => (
                     <View key={index} style={styles.row}>
-                        {pair.map((food) => (
+                        {pair.map((food, index) => (
                             <FoodCard
+                                key={index}
                                 title={food.title}
                                 image={food.image}
                                 currentPrice={food.currentPrice}

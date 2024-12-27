@@ -9,9 +9,10 @@ import PriceWidget from '../price-widget/price-widget'
 interface IHeaderProps {
     title: string
     isBack?: boolean
+    marginLeft?: number
 }
 
-const Header = ({ title, isBack = true }: IHeaderProps) => {
+const Header = ({ title, isBack = true, marginLeft = 0 }: IHeaderProps) => {
     const navigation = useNavigation();
 
     return (
@@ -25,7 +26,7 @@ const Header = ({ title, isBack = true }: IHeaderProps) => {
                 <ChevronIcon />
                 <Text style={{ fontSize: 17, fontWeight: '400', color: '#FFF7F7' }}>Back</Text>
             </MyTouchableOpacity>
-            <Text style={{ fontSize: 17, fontWeight: '500', color: '#FFF7F7', marginLeft: 64 }}>{title}</Text>
+            <Text style={{ fontSize: 17, fontWeight: '500', color: '#FFF7F7', marginLeft: marginLeft ? marginLeft : 64 }}>{title}</Text>
             {isBack ? null : <PriceWidget />}
         </View>
     )
