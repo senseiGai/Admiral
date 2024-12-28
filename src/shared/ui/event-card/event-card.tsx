@@ -10,9 +10,12 @@ import MyTouchableOpacity from '../my-touchable-opacity/my-touchable-opacity'
 
 type NavigationProp = NativeStackNavigationProp<MainStackParamList, 'EventDetails'>
 
-interface EventCardProps extends EventType {}
+interface EventCardProps {
+    event: EventType
+    isClickable?: boolean
+}
 
-const EventCard = (event: EventCardProps) => {
+const EventCard = ({ event, isClickable = false }: EventCardProps) => {
     const navigation = useNavigation<NavigationProp>()
 
     const handlePress = () => {
@@ -22,43 +25,70 @@ const EventCard = (event: EventCardProps) => {
     }
 
     return (
-        <MyTouchableOpacity style={styles.container} onPress={handlePress}>
-            <Image source={event.image} style={styles.backgroundImage} resizeMode="cover" />
-            <View style={styles.overlay}>
-                <View style={styles.contentContainer}>
-                    {Platform.OS === 'ios' ? (
-                        <>
-                            <BlurView
-                                style={styles.content}
-                                blurType="dark"
-                                blurAmount={10}
-                                overlayColor="#2D264B80"
-                                reducedTransparencyFallbackColor="#2D264B80"
-                            />
-                            <View style={styles.textWrapper}>
-                                <View style={styles.textContent}>
-                                    <Text font="sf" style={styles.title}>{event.title}</Text>
-                                    <View style={styles.timeContainer}>
-                                        <CalendarIcon />
-                                        <Text style={styles.time}>Time: {event.time}</Text>
+        isClickable ?
+            <MyTouchableOpacity style={styles.container} onPress={handlePress}>
+                <Image source={event.image} style={styles.backgroundImage} resizeMode="cover" />
+                <View style={styles.overlay}>
+                    <View style={styles.contentContainer}>
+                        {Platform.OS === 'ios' ? (
+                            <>
+                                <BlurView
+                                    style={styles.content}
+                                    blurType="dark"
+                                    blurAmount={10}
+                                    overlayColor="#2D264B80"
+                                    reducedTransparencyFallbackColor="#2D264B80"
+                                />
+                                <View style={styles.textWrapper}>
+                                    <View style={styles.textContent}>
+                                        <Text font="sf" style={styles.title}>{event.title}</Text>
+                                        <View style={styles.timeContainer}>
+                                            <CalendarIcon />
+                                            <Text style={styles.time}>Time: {event.time}</Text>
+                                        </View>
                                     </View>
                                 </View>
+                            </>
+                        ) : (
+                            <View style={[styles.content, styles.androidContent]}>
+                                <Image source={event.subImage} style={{ height: 63, width: '100%', alignSelf: 'center' }} resizeMode="cover" />
                             </View>
-                        </>
-                    ) : (
-                        <View style={[styles.content, styles.androidContent]}>
-                            <View style={styles.textContent}>
-                                <Text font="sf" style={styles.title}>{event.title}</Text>
-                                <View style={styles.timeContainer}>
-                                    <CalendarIcon />
-                                    <Text style={styles.time}>Time: {event.time}</Text>
+                        )}
+                    </View>
+                </View>
+            </MyTouchableOpacity> :
+            <View style={styles.container}>
+                <Image source={event.image} style={styles.backgroundImage} resizeMode="cover" />
+                <View style={styles.overlay}>
+                    <View style={styles.contentContainer}>
+                        {Platform.OS === 'ios' ? (
+                            <>
+                                <BlurView
+                                    style={styles.content}
+                                    blurType="dark"
+                                    blurAmount={10}
+                                    overlayColor="#2D264B80"
+                                    reducedTransparencyFallbackColor="#2D264B80"
+                                />
+                                <View style={styles.textWrapper}>
+                                    <View style={styles.textContent}>
+                                        <Text font="sf" style={styles.title}>{event.title}</Text>
+                                        <View style={styles.timeContainer}>
+                                            <CalendarIcon />
+                                            <Text style={styles.time}>Time: {event.time}</Text>
+                                        </View>
+                                    </View>
                                 </View>
+                            </>
+                        ) : (
+                            <View style={[styles.content, styles.androidContent]}>
+                                <Image source={event.subImage} style={{ height: 63, width: '100%', alignSelf: 'center' }} resizeMode="cover" />
                             </View>
-                        </View>
-                    )}
+                        )}
+                    </View>
                 </View>
             </View>
-        </MyTouchableOpacity>
+
     )
 }
 
@@ -109,7 +139,6 @@ const styles = StyleSheet.create({
     androidContent: {
         backgroundColor: '#2D264B80',
         justifyContent: 'center',
-        paddingHorizontal: 16,
     },
     title: {
         color: '#FFFFFF',

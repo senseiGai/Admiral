@@ -4,6 +4,8 @@ import Text from '../../shared/ui/text/text'
 import AppLayout from '../../shared/ui/app-layout/app-layout'
 import { EventType } from '../navigation/MainStack'
 import EventCard from '../../shared/ui/event-card/event-card'
+import { useNavigation } from '@react-navigation/native'
+import MyTouchableOpacity from '../../shared/ui/my-touchable-opacity/my-touchable-opacity'
 
 interface EventDetailsProps {
     route: {
@@ -14,13 +16,14 @@ interface EventDetailsProps {
 }
 
 const EventDetailsScreen = ({ route }: EventDetailsProps) => {
+    const navigation = useNavigation()
     const { event } = route.params
     const { description, subText } = event
 
     return (
         <AppLayout title="Events" isBack marginLeft={100}>
             <View style={styles.container}>
-                <EventCard {...event} />
+                <EventCard event={event} />
                 <View style={styles.content}>
                     <Text font="sf" style={styles.mainText}>
                         {description}
@@ -29,9 +32,9 @@ const EventDetailsScreen = ({ route }: EventDetailsProps) => {
                         {subText}
                     </Text>
                 </View>
-                <View style={styles.buttonContainer}>
+                <MyTouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('Menu' as never)}>
                     <Text style={styles.buttonText}>Back to menu</Text>
-                </View>
+                </MyTouchableOpacity>
             </View>
         </AppLayout>
     )

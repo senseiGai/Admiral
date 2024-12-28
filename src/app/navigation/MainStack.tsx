@@ -19,6 +19,7 @@ export type EventType = {
     image: any;
     description: string;
     subText: string;
+    subImage: any;
 }
 
 export type MainStackParamList = {
