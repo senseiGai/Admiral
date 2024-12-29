@@ -4,7 +4,7 @@ import Svg, { Path } from "react-native-svg";
 
 const LinesIcon = () => (
     <Svg
-        width={1870}
+        width={1800}
         height={2335}
         viewBox={`0 0 1907 2335`}
         fill="none"
