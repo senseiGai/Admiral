@@ -1,5 +1,5 @@
-import { View, StyleSheet, ScrollView } from 'react-native'
-import React from 'react'
+import { View, StyleSheet, ScrollView, Text, Image } from 'react-native'
+import React, { useEffect } from 'react'
 import AppLayout from '../../shared/ui/app-layout/app-layout'
 import CategoryButton from '../../shared/ui/category-button/category-button'
 import { CATEGORIES } from '../../entities/category/constants/categories'
@@ -9,12 +9,18 @@ import { useFoodStore } from '../../entities/food/model/food-store'
 
 const ShopScreen = () => {
     const { activeCategory, setActiveCategory } = useCategoryStore()
-    const { foods, toggleFavorite, incrementQuantity, decrementQuantity, addToBasket } = useFoodStore()
+    const { foods, toggleFavorite, incrementQuantity, decrementQuantity, addToBasket, loadFavorites } = useFoodStore()
+
+    useEffect(() => {
+        loadFavorites()
+    }, [])
 
     const filteredFoods = foods.filter(food => {
         if (activeCategory === 'Favorite') return food.isFavorite
         return food.category === activeCategory
     })
+
+    const showEmptyFavorites = activeCategory === 'Favorite' && filteredFoods.length === 0
 
     // Create pairs of foods for the grid layout
     const foodPairs = []
@@ -38,27 +44,38 @@ const ShopScreen = () => {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.scrollContent}
             >
-                {foodPairs.map((pair, index) => (
-                    <View key={index} style={styles.row}>
-                        {pair.map((food, index) => (
-                            <FoodCard
-                                key={index}
-                                title={food.title}
-                                image={food.image}
-                                currentPrice={food.currentPrice}
-                                originalPrice={food.originalPrice}
-                                calories={food.calories}
-                                weight={food.weight}
-                                isFavorite={food.isFavorite}
-                                quantity={food.quantity}
-                                onFavorite={() => toggleFavorite(food.id)}
-                                onAddToBasket={() => addToBasket(food.id)}
-                                onIncrement={() => incrementQuantity(food.id)}
-                                onDecrement={() => decrementQuantity(food.id)}
-                            />
-                        ))}
+                {showEmptyFavorites ? (
+                    <View style={styles.emptyContainer}>
+                        <Text style={styles.emptyText}>Add your favorite dishes</Text>
+                        <Image
+                            source={require('../../../assets/images/cart01.png')}
+                            style={styles.emptyImage}
+                            resizeMode="contain"
+                        />
                     </View>
-                ))}
+                ) : (
+                    foodPairs.map((pair, index) => (
+                        <View key={index} style={styles.row}>
+                            {pair.map((food, index) => (
+                                <FoodCard
+                                    key={index}
+                                    title={food.title}
+                                    image={food.image}
+                                    currentPrice={food.currentPrice}
+                                    originalPrice={food.originalPrice}
+                                    calories={food.calories}
+                                    weight={food.weight}
+                                    isFavorite={food.isFavorite}
+                                    quantity={food.quantity}
+                                    onFavorite={() => toggleFavorite(food.id)}
+                                    onAddToBasket={() => addToBasket(food.id)}
+                                    onIncrement={() => incrementQuantity(food.id)}
+                                    onDecrement={() => decrementQuantity(food.id)}
+                                />
+                            ))}
+                        </View>
+                    ))
+                )}
             </ScrollView>
         </AppLayout>
     )
@@ -74,12 +91,30 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         paddingHorizontal: 6,
+        flex: 1,
     },
     row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 12
     },
+    emptyContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1,
+        minHeight: 600,
+    },
+    emptyImage: {
+        width: 235,
+        height: 235,
+        marginTop: 93,
+        marginBottom: 138,
+    },
+    emptyText: {
+        fontSize: 24,
+        fontWeight: '700',
+        color: '#FFFFFF',
+    }
 })
 
 export default ShopScreen

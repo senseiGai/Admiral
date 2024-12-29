@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { useCartStore } from '../../cart/model/cart-store'
-import { CategoryType } from '../../category/constants/categories'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export interface IFoodItem {
     id: string
@@ -22,6 +22,7 @@ interface FoodStore {
     decrementQuantity: (id: string) => void
     addToBasket: (id: string) => void
     resetQuantities: () => void
+    loadFavorites: () => Promise<void>
 }
 
 const mockFoods: IFoodItem[] = [
@@ -168,14 +169,41 @@ const mockFoods: IFoodItem[] = [
     },
 ]
 
-export const useFoodStore = create<FoodStore>((set) => ({
+const FAVORITES_STORAGE_KEY = '@admiral_favorites'
+
+export const useFoodStore = create<FoodStore>((set, get) => ({
     foods: mockFoods,
-    toggleFavorite: (id) =>
-        set((state) => ({
-            foods: state.foods.map((food) =>
+    loadFavorites: async () => {
+        try {
+            const storedFavorites = await AsyncStorage.getItem(FAVORITES_STORAGE_KEY)
+            if (storedFavorites) {
+                const favoriteIds = JSON.parse(storedFavorites) as string[]
+                set((state) => ({
+                    foods: state.foods.map((food) => ({
+                        ...food,
+                        isFavorite: favoriteIds.includes(food.id)
+                    }))
+                }))
+            }
+        } catch (error) {
+            console.error('Error loading favorites:', error)
+        }
+    },
+    toggleFavorite: async (id) => {
+        try {
+            const newFoods = get().foods.map((food) =>
                 food.id === id ? { ...food, isFavorite: !food.isFavorite } : food
-            ),
-        })),
+            )
+            set({ foods: newFoods })
+
+            const favoriteIds = newFoods
+                .filter(food => food.isFavorite)
+                .map(food => food.id)
+            await AsyncStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(favoriteIds))
+        } catch (error) {
+            console.error('Error saving favorites:', error)
+        }
+    },
     incrementQuantity: (id) => {
         const cartStore = useCartStore.getState()
         set((state) => ({
